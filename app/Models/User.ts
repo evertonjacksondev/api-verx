@@ -6,13 +6,14 @@ export default class User extends BaseModel {
   public id: number
 
   @column()
-  public name: string
+  public name:string
 
   @column()
-  public city: string
+  public city:string
+
 
   @column()
-  public UF: string
+  public UF:string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

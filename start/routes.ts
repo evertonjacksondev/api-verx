@@ -1,9 +1,8 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/v1/', async () => {
-  return { hello: 'world' }
-})
 
-Route.post('/v1/user', 'UsersController.createUser')
+
+Route.post('/v1/users', 'UsersController.createUser')
+Route.get('/v1/users/list', 'UsersController.list')
 
