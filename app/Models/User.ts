@@ -6,14 +6,19 @@ export default class User extends BaseModel {
   public id: number
 
   @column()
-  public name:string
+  public name: string
 
   @column()
-  public city:string
-
+  public document: number
 
   @column()
-  public UF:string
+  public document_type: string
+  
+  @column()
+  public city: string
+
+  @column()
+  public UF: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
