@@ -14,6 +14,7 @@ Route.delete('/v1/users/list/:id', 'UsersController.deleteUser')
 Route.post('/v1/farm', 'FarmsController.createFarm')
 Route.put('/v1/farm/:id', 'FarmsController.editFarm')
 Route.get('/v1/farm/list', 'FarmsController.listAllFarm')
+Route.get('/v1/farm/list/select', 'FarmsController.listAllFarmsSelect')
 Route.get('/v1/farm/list/:id', 'FarmsController.listFarmId')
 Route.delete('/v1/farm/list/:id', 'FarmsController.deleteFarm')
 

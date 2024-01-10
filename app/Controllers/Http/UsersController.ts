@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User';
+import { UserDto } from '../dto/user-dto';
 
 
 export default class UsersController {
@@ -9,13 +10,15 @@ export default class UsersController {
         try {
             let { city, document, name, uf, document_type } =
                 request.only(['city', 'document', 'name', 'uf', 'document_type'])
-            document = Number(document.replaceAll('.', '').replaceAll('/', '').replaceAll('-', ''))
+
+            let newDocument = Number(document.replace(/[^\d]/g, ''))
+
             const verify = await User
                 .query()
-                .where('document', '=', document)
+                .where('document', '=', newDocument)
 
             if (verify.length) throw { message: 'Usuário Já cadastrado' }
-            const user = await User.create({ city, document: document, name, uf, document_type })
+            const user = await User.create({ city, document: newDocument, name, uf, document_type })
             return response.status(201).json(user);
         } catch (error) {
             return response.status(500).json({ message: error.message });
@@ -34,8 +37,56 @@ export default class UsersController {
 
     async listAllUsers({ response }: HttpContextContract) {
         try {
-            const user = await User.all()
-            return response.status(200).json(user);
+            const users = await User.query()
+                .select('*')
+                .leftJoin('farms', 'users.id', 'farms.user_id')
+                .leftJoin('product_farms', 'farms.id', 'product_farms.farm_id')
+                .leftJoin('products', 'product_farms.product_id', 'products.id')
+
+            function groupBy(array, key) {
+                return array.reduce((acc, item) => ({
+                    ...acc,
+                    [item[key]]: [...(acc[item[key]] ?? []), item],
+                }),
+                    {})
+            }
+
+            const usersGroup = groupBy(users, 'name')
+            const newArray: UserDto[] = [];
+         
+            for (let users in usersGroup) {
+                const newUsers = new UserDto()
+
+                for (let user of usersGroup[users]) {
+
+                  
+                    newUsers.name = usersGroup[users][0].name
+                    newUsers.city = usersGroup[users][0].city
+                    newUsers.document = usersGroup[users][0].document
+                    newUsers.document_type = usersGroup[users][0].document_type
+                    newUsers.uf = usersGroup[users][0].uf
+
+
+                    for (let product of usersGroup[users]) {
+
+                        if (product.product_id && product.product_name) {
+
+                            newUsers.cultivation.push({
+                                product_id: product.product_id,
+                                product_name: product.product_name,
+                            })
+
+
+                        }
+
+                    }
+
+                }
+                newArray.push(newUsers)
+            }
+
+
+            return response.status(200).json(newArray);
 
         } catch (error) {
             return response.status(500).json({ error: error.message });
@@ -51,7 +102,6 @@ export default class UsersController {
             return response.status(500).json({ error: error.message });
         }
     }
-
 
     async deleteUser({ response, params }: HttpContextContract) {
         try {

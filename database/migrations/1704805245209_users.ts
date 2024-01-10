@@ -11,7 +11,7 @@ export default class extends BaseSchema {
       table.bigint('document')
         .notNullable()
         .unique()
-      table.enu('document_type', ['PJ', 'PF'])
+       table.enu('document_type', ['PJ', 'PF'])
         .notNullable()
       table.text('city')
         .notNullable

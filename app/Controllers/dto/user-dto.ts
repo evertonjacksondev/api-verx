@@ -4,4 +4,5 @@ export class UserDto {
     city: string
     document: number
     document_type: string
+    cultivation: [{ product_id: number, product_name: string }]
 }
