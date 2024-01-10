@@ -42,6 +42,17 @@ export default class UsersController {
         }
     }
 
+    async listAllUsersSelect({ response }: HttpContextContract) {
+        try {
+            const user = (await User.query().select('id', 'name', 'document'))
+            return response.status(200).json(user);
+
+        } catch (error) {
+            return response.status(500).json({ error: error.message });
+        }
+    }
+
+
     async deleteUser({ response, params }: HttpContextContract) {
         try {
 
