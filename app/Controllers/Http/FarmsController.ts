@@ -4,60 +4,58 @@ import Farm from 'App/Models/Farm';
 export default class FarmsController {
 
 
-    async createUser({ request, response }: HttpContextContract) {
+    async createFarm({ request, response }: HttpContextContract) {
         try {
-            let { city, document, name, UF, document_type } =
-                request.only(['city', 'document', 'name', 'UF', 'document_type'])
-
-            const user = await Farm.create({ city, document, name, UF, document_type })
-            return response.status(201).json(user);
+            let { farm_name, farm_area_total, farm_area_used } = request.only(['farm_name', 'farm_area_total', "farm_area_used"])
+            const farm = await Farm.create({ farm_name, farm_area_total, farm_area_used })
+            return response.status(201).json(farm);
         } catch (error) {
             return response.status(500).json({ error: error.message });
         }
     }
 
-    async listUserId({ response, params }: HttpContextContract) {
+    async listFarmId({ response, params }: HttpContextContract) {
         try {
             const { id } = params
-            const user = await Farm.find(id)
-            return response.status(200).json(user);
+            const farm = await Farm.find(id)
+            return response.status(200).json(farm);
         } catch (error) {
             return response.status(500).json({ error: error.message });
         }
     }
 
-    async listAllUsers({ response }: HttpContextContract) {
+    async listAllFarm({ response }: HttpContextContract) {
         try {
-            const user = await Farm.all()
-            return response.status(200).json(user);
+            const farm = await Farm.all()
+            return response.status(200).json(farm);
 
         } catch (error) {
             return response.status(500).json({ error: error.message });
         }
     }
 
-    async deleteUser({ response, params }: HttpContextContract) {
+    async deleteFarm({ response, params }: HttpContextContract) {
         try {
 
             const { id } = params
-            const user = await Farm.find(id)
-            await user?.delete()
-            return response.status(200).json({ message: 'Usuario Deletado!' });
+            const farm = await Farm.find(id)
+            await farm?.delete()
+            return response.status(200).json({ message: 'Fazenda Deletada!' });
 
         } catch (error) {
             return response.status(500).json({ error: error.message });
         }
     }
 
-    async editUser({ request, params, response }: HttpContextContract) {
+    async editFarm({ request, params, response }: HttpContextContract) {
         try {
             const { id } = params
             let dataToUpdate =
-                request.only(['city', 'document', 'name', 'UF', 'document_type'])
-            const user = await Farm.findOrFail(id)
-            user.merge(dataToUpdate);
-            await user.save();
-            return response.status(200).json(user);
+                request.only(['farm_name'])
+            const farm = await Farm.findOrFail(id)
+            farm.merge(dataToUpdate);
+            await farm.save();
+            return response.status(200).json(farm);
 
         } catch (error) {
             return response.status(500).json({ error: error.message });

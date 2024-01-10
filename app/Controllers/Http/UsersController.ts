@@ -4,15 +4,21 @@ import User from 'App/Models/User';
 
 export default class UsersController {
 
+
     async createUser({ request, response }: HttpContextContract) {
         try {
-            let { city, document, name, UF, document_type } =
-                request.only(['city', 'document', 'name', 'UF', 'document_type'])
+            let { city, document, name, uf, document_type } =
+                request.only(['city', 'document', 'name', 'uf', 'document_type'])
+            document = Number(document.replaceAll('.', '').replaceAll('/', '').replaceAll('-', ''))
+            const verify = await User
+                .query()
+                .where('document', '=', document)
 
-            const user = await User.create({ city, document, name, UF, document_type })
+            if (verify.length) throw { message: 'Usuário Já cadastrado' }
+            const user = await User.create({ city, document: document, name, uf, document_type })
             return response.status(201).json(user);
         } catch (error) {
-            return response.status(500).json({ error: error.message });
+            return response.status(500).json({ message: error.message });
         }
     }
 

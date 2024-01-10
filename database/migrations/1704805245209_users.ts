@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.text('name')
         .notNullable()
-      table.text('document')
+      table.bigint('document')
         .notNullable()
         .unique()
       table.enu('document_type', ['PJ', 'PF'])

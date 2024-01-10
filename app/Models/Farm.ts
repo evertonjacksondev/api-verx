@@ -8,6 +8,12 @@ export default class Farm extends BaseModel {
   @column()
   public farm_name: string
 
+  @column()
+  public farm_area_total: number
+
+  @column()
+  public farm_area_used: number
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

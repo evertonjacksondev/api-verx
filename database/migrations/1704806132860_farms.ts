@@ -7,8 +7,8 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.text('farm_name')
-        .notNullable()
-        .unique()
+      table.bigint('farm_area_total')
+      table.bigint('farm_area_used')
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

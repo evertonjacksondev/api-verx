@@ -18,7 +18,7 @@ export default class User extends BaseModel {
   public city: string
 
   @column()
-  public UF: string
+  public uf: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
