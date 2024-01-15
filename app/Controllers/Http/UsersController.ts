@@ -53,39 +53,31 @@ export default class UsersController {
 
             const usersGroup = groupBy(users, 'name')
             const newArray: UserDto[] = [];
-         
+
             for (let users in usersGroup) {
                 const newUsers = new UserDto()
 
-                for (let user of usersGroup[users]) {
+                newUsers.id = usersGroup[users][0].$extras.user_id || usersGroup[users][0].id
+                newUsers.name = usersGroup[users][0].name
+                newUsers.city = usersGroup[users][0].city
+                newUsers.document = usersGroup[users][0].document
+                newUsers.document_type = usersGroup[users][0].document_type
+                newUsers.uf = usersGroup[users][0].uf
 
-                  
-                    newUsers.name = usersGroup[users][0].name
-                    newUsers.city = usersGroup[users][0].city
-                    newUsers.document = usersGroup[users][0].document
-                    newUsers.document_type = usersGroup[users][0].document_type
-                    newUsers.uf = usersGroup[users][0].uf
+                const items: any = []
+                for (let product of usersGroup[users]) {
 
-
-                    for (let product of usersGroup[users]) {
-
-                        if (product.product_id && product.product_name) {
-
-                            newUsers.cultivation.push({
-                                product_id: product.product_id,
-                                product_name: product.product_name,
-                            })
-
-
-                        }
-
+                    if (product.$extras.product_id && product.$extras.product_name) {
+                        items.push({
+                            farm_name: product.$extras.farm_name,
+                            product_id: product.$extras.product_id,
+                            product_name: product.$extras.product_name
+                        })
                     }
-
                 }
+                newUsers.cultivation = items
                 newArray.push(newUsers)
             }
-
-
             return response.status(200).json(newArray);
 
         } catch (error) {
